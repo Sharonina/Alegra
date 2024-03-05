@@ -26,8 +26,10 @@ onMounted(() => {
 
 watch([users, images], (newItems) => {
   const [users, images] = newItems
+  // Orden random de usuarios
+  users.sort(() => Math.random() - 0.5)
   users.forEach((user, index) => {
-    //randon number between 0 and 9
+    // Img random para el usuario
     const random = Math.floor(Math.random() * 10)
     user.image = images[random]?.image?.thumbnailLink
   })
@@ -56,6 +58,7 @@ function getValue() {
 
   <div v-for="user in users" :key="user.id">
     <img :src="user.image" alt="radom image" />
+    <button :id="user.name">like</button>
     <h3>{{ user.name }}</h3>
   </div>
 </template>
