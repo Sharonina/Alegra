@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { getSellers } from '@/api/sellers'
 import { getImages } from '@/api/googleimages'
 
@@ -11,6 +11,8 @@ interface User {
 
 const users = ref<User[]>([])
 const images = ref<any[]>([])
+const searchText = ref<string>('')
+let searchValue = ref<string>('')
 
 onMounted(() => {
   getSellers().then((res) => {
@@ -30,11 +32,30 @@ watch([users, images], (newItems) => {
     user.image = images[random]?.image?.thumbnailLink
   })
 })
+
+function getValue() {
+  console.log(searchText.value)
+  searchValue.value = searchText.value
+
+  getImages(searchValue.value).then((res) => {
+    images.value = res
+  })
+
+  searchText.value = ''
+}
 </script>
 
 <template>
+  <section>
+    <div class="searcher-container">
+      <input v-model="searchText" type="text" placeholder="Frutas, vehículos, animales" />
+      <button @click="getValue">Buscar</button>
+    </div>
+    <p>Esto es lo que encontramos para "{{ searchValue }}"</p>
+  </section>
+
   <div v-for="user in users" :key="user.id">
-    <img :src="user.image" alt="user.name" />
+    <img :src="user.image" alt="radom image" />
     <h3>{{ user.name }}</h3>
   </div>
 </template>
