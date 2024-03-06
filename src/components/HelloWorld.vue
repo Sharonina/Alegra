@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import logo from '@/assets/logo.png'
-defineProps<{
-  msg: string
-}>()
 </script>
 
 <template>

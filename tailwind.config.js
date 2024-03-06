@@ -9,7 +9,8 @@ export default {
       'dark-green': '#00535e',
       'medium-gray': '#73879c',
       'dark-gray': '#334155',
-      'light-red': '#e85e42'
+      'light-red': '#e85e42',
+      'dark-red': '#e85e42'
     }
   },
   plugins: []
