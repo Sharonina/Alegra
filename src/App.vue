@@ -9,10 +9,10 @@ import HelloWorld from './components/HelloWorld.vue'
       <HelloWorld msg="You did it!" />
       <nav>
         <RouterLink to="/">Home</RouterLink>
+
+        <RouterLink to="/sellers">Sellers</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/terms">Terms</RouterLink>
-        <RouterLink to="/contest">Contest</RouterLink>
-        <RouterLink to="/sellers">Sellers</RouterLink>
       </nav>
     </div>
   </header>
