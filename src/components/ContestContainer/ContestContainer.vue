@@ -4,18 +4,12 @@ import { getSellers } from '@/api/sellers'
 import { getImages } from '@/api/googleimages'
 import { createBill } from '@/api/bills'
 
-import searchIcon from '@/assets/search-icon.png'
-import likeIcon from '@/assets/heart-icon.png'
-
-interface User {
-  id: number
-  name: string
-  image: string
-  points: number
-}
+import type { User, UserWithPoints, Image } from './types'
+import ContestImage from './ContestImage/ContestImage.vue'
+import logo from '@/assets/logo.png'
 
 const users = ref<User[]>([])
-const images = ref<any[]>([])
+const images = ref<Image[]>([])
 const searchText = ref<string>('')
 let searchValue = ref<string>('')
 const defaultImage = ref<string>(
@@ -32,10 +26,13 @@ onMounted(() => {
 })
 
 const usersWithPoints = computed(() => {
-  return users.value.map((user: User) => ({
-    ...user,
-    points: 0
-  }))
+  return users.value.map(
+    (user: User) =>
+      ({
+        ...user,
+        points: 0
+      }) as UserWithPoints
+  )
 })
 
 watch([users, images], (newItems) => {
@@ -43,7 +40,6 @@ watch([users, images], (newItems) => {
   usersWithPoints.value.forEach((user) => {
     user.image = images[user.id]?.image?.thumbnailLink
   })
-  console.log(users, 'users')
 })
 
 function getValue() {
@@ -103,19 +99,7 @@ function handleImageLike(userId: number) {
 
     <div class="h-4/5 flex flex-col items-center md:flex-row justify-evenly" v-if="showResults">
       <div class="w-80 h-60 relative mt-10" v-for="user in usersWithPoints" :key="user.id">
-        <div class="w-full">
-          <img
-            class="w-full shadow-lg rounded h-52 object-cover"
-            :src="user.image || defaultImage"
-            alt="random image"
-          />
-          <button
-            class="shadow ease-in duration-300 left-2/4 bottom-0 w-16 h-16 border-4 border-white rounded-full absolute bg-light-red -translate-x-2/4 flex justify-center items-center hover:bg-dark-red hover:scale-110"
-            @click="handleImageLike(user.id)"
-          >
-            <img class="w-7" :src="likeIcon" />
-          </button>
-        </div>
+        <ContestImage @like="handleImageLike" :user="user" :defaultImage="defaultImage" />
       </div>
     </div>
     <div v-else class="h-4/5 flex flex-col justify-center items-center">
@@ -125,7 +109,6 @@ function handleImageLike(userId: number) {
         Nuestros vendedores están listos para responder a tu solicitud
       </p>
     </div>
-
     <div v-for="user in usersWithPoints" :key="user.id">
       <div class="mb-1 text-base font-medium text-dark-green">
         {{ user.name }}
@@ -141,37 +124,47 @@ function handleImageLike(userId: number) {
     </div>
   </section>
 
-  <section v-else>
-    <p>terminó el juego</p>
-    <div></div>
+  <section v-else class="h-full flex flex-col items-center justify-center">
+    <h2 class="text-lg font-semibold text-center md:text-xl">
+      ¡Felicidades {{ bill.seller.name }}!
+    </h2>
+    <p class="mt-5 text-md text-center md:text-lg">
+      Fuiste el primer vendedor en obtener 20 puntos
+    </p>
+    <div
+      class="shadow w-4/5 flex flex-col items-center justify-evenly border border-slate-400 mt-12 h-3/4"
+    >
+      <div class="flex flex-col items-center">
+        <figure>
+          <img class="w-12 object-contain" :src="logo" />
+        </figure>
+        <h3 class="text-lg tracking-widest">FACTURA</h3>
+      </div>
+
+      <div class="w-9/12">
+        <p class="font-semibold">Nombre del vendedor</p>
+        <p>{{ bill.seller.name }}</p>
+      </div>
+      <div class="w-9/12">
+        <p class="font-semibold">Nombre de la empresa</p>
+        <p>Imágenes del mundo</p>
+      </div>
+      <div class="w-9/12">
+        <p class="font-semibold">Fecha y hora de emisión</p>
+        <p>{{ bill.datetime }}</p>
+      </div>
+
+      <table class="w-full">
+        <tr class="bg-slate-400 h-10">
+          <th>Descripción</th>
+          <th>Importe</th>
+        </tr>
+        <tr class="text-center h-10">
+          <td>Imágenes</td>
+          <td>{{ bill.total }}</td>
+        </tr>
+      </table>
+    </div>
+    <RouterLink to="/" class="px-8 py-4 mt-10 border border-light-green">Jugar de nuevo</RouterLink>
   </section>
 </template>
-
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
-</style>

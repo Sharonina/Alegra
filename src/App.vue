@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import Nav from './components/Nav.vue'
 </script>
 
 <template>
   <header>
-    <div class="wrapper">
-      <HelloWorld />
-      <nav>
+    <div class="wrapper flex justify-center my-5">
+      <Nav />
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/sellers">Sellers</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/terms">Terms</RouterLink>
-      </nav>
+      </nav> -->
     </div>
   </header>
   <RouterView />
@@ -69,3 +69,4 @@ nav a:first-of-type {
   }
 }
 </style>
+./components/Nav.vue

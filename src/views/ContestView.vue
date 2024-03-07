@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ContestPage from '@/components/ContestPage.vue'
+import ContestContainer from '@/components/ContestContainer/ContestContainer.vue'
 </script>
 
 <template>
   <main>
-    <ContestPage />
+    <ContestContainer />
   </main>
 </template>
