@@ -5,14 +5,14 @@ import Nav from './components/Nav.vue'
 
 <template>
   <header>
-    <div class="wrapper">
+    <div class="wrapper flex justify-center my-5">
       <Nav />
-      <nav>
+      <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/sellers">Sellers</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/terms">Terms</RouterLink>
-      </nav>
+      </nav> -->
     </div>
   </header>
   <RouterView />

@@ -6,6 +6,7 @@ import { createBill } from '@/api/bills'
 
 import type { User, UserWithPoints, Image } from './types'
 import ContestImage from './ContestImage/ContestImage.vue'
+import logo from '@/assets/logo.png'
 
 const users = ref<User[]>([])
 const images = ref<Image[]>([])
@@ -58,7 +59,7 @@ function addPoints(userId: number) {
       user.points = user.points + 3
       console.log(user.points)
     }
-    if (user.points >= 6) {
+    if (user.points >= 3) {
       createBill(user.id).then((res) => {
         bill.value = res
         console.log(bill.value)
@@ -123,8 +124,47 @@ function handleImageLike(userId: number) {
     </div>
   </section>
 
-  <section v-else>
-    <p>terminó el juego</p>
-    <div></div>
+  <section v-else class="h-full flex flex-col items-center justify-center">
+    <h2 class="text-lg font-semibold text-center md:text-xl">
+      ¡Felicidades {{ bill.seller.name }}!
+    </h2>
+    <p class="mt-5 text-md text-center md:text-lg">
+      Fuiste el primer vendedor en obtener 20 puntos
+    </p>
+    <div
+      class="shadow w-4/5 flex flex-col items-center justify-evenly border border-slate-400 mt-12 h-3/4"
+    >
+      <div class="flex flex-col items-center">
+        <figure>
+          <img class="w-12 object-contain" :src="logo" />
+        </figure>
+        <h3 class="text-lg tracking-widest">FACTURA</h3>
+      </div>
+
+      <div class="w-9/12">
+        <p class="font-semibold">Nombre del vendedor</p>
+        <p>{{ bill.seller.name }}</p>
+      </div>
+      <div class="w-9/12">
+        <p class="font-semibold">Nombre de la empresa</p>
+        <p>Imágenes del mundo</p>
+      </div>
+      <div class="w-9/12">
+        <p class="font-semibold">Fecha y hora de emisión</p>
+        <p>{{ bill.datetime }}</p>
+      </div>
+
+      <table class="w-full">
+        <tr class="bg-slate-400 h-10">
+          <th>Descripción</th>
+          <th>Importe</th>
+        </tr>
+        <tr class="text-center h-10">
+          <td>Imágenes</td>
+          <td>{{ bill.total }}</td>
+        </tr>
+      </table>
+    </div>
+    <RouterLink to="/" class="px-8 py-4 mt-10 border border-light-green">Jugar de nuevo</RouterLink>
   </section>
 </template>
