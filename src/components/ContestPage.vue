@@ -2,7 +2,7 @@
 import { onMounted, ref, watch, computed } from 'vue'
 import { getSellers } from '@/api/sellers'
 import { getImages } from '@/api/googleimages'
-import { sortAndDeduplicateDiagnostics } from 'typescript'
+import { createBill } from '@/api/bills'
 
 import searchIcon from '@/assets/search-icon.png'
 import likeIcon from '@/assets/heart-icon.png'
@@ -23,6 +23,7 @@ const defaultImage = ref<string>(
 )
 const showResults = ref<boolean>(false)
 const showWinner = ref<boolean>(false)
+const bill = ref<any>({})
 
 onMounted(() => {
   getSellers().then((res) => {
@@ -62,8 +63,12 @@ function addPoints(userId: number) {
       user.points = user.points + 3
       console.log(user.points)
     }
-    if (user.points >= 9) {
-      showWinner.value = true
+    if (user.points >= 3) {
+      createBill(user.id).then((res) => {
+        bill.value = res
+        console.log(bill.value)
+        showWinner.value = true
+      })
     }
   })
 }
@@ -96,7 +101,7 @@ function handleImageLike(userId: number) {
       </p>
     </section>
 
-    <div class="flex flex-col items-center md:flex-row justify-evenly" v-if="showResults">
+    <div class="h-4/5 flex flex-col items-center md:flex-row justify-evenly" v-if="showResults">
       <div class="w-80 h-60 relative mt-10" v-for="user in usersWithPoints" :key="user.id">
         <div class="w-full">
           <img
@@ -120,10 +125,25 @@ function handleImageLike(userId: number) {
         Nuestros vendedores están listos para responder a tu solicitud
       </p>
     </div>
+
+    <div v-for="user in usersWithPoints" :key="user.id">
+      <div class="mb-1 text-base font-medium text-dark-green">
+        {{ user.name }}
+      </div>
+      <div class="w-full bg-gray-200 rounded-full mb-4">
+        <div
+          class="bg-light-green rounded-full p-0.5 text-xs font-medium text-center leading-none text-dark-gray"
+          :style="{ width: (user.points * 100) / 20 + '%' }"
+        >
+          {{ user.points }}
+        </div>
+      </div>
+    </div>
   </section>
 
   <section v-else>
     <p>terminó el juego</p>
+    <div></div>
   </section>
 </template>
 
