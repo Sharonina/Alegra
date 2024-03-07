@@ -6,13 +6,12 @@ import HelloWorld from './components/HelloWorld.vue'
 <template>
   <header>
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld />
       <nav>
         <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/sellers">Sellers</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/terms">Terms</RouterLink>
-        <RouterLink to="/contest">Contest</RouterLink>
-        <RouterLink to="/sellers">Sellers</RouterLink>
       </nav>
     </div>
   </header>
@@ -56,20 +55,8 @@ nav a:first-of-type {
 }
 
 @media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
   .logo {
     margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
   }
 
   nav {
