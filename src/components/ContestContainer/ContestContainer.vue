@@ -4,18 +4,11 @@ import { getSellers } from '@/api/sellers'
 import { getImages } from '@/api/googleimages'
 import { createBill } from '@/api/bills'
 
-import searchIcon from '@/assets/search-icon.png'
-import likeIcon from '@/assets/heart-icon.png'
-
-interface User {
-  id: number
-  name: string
-  image: string
-  points: number
-}
+import type { User, UserWithPoints, Image } from './types'
+import ContestImage from './ContestImage/ContestImage.vue'
 
 const users = ref<User[]>([])
-const images = ref<any[]>([])
+const images = ref<Image[]>([])
 const searchText = ref<string>('')
 let searchValue = ref<string>('')
 const defaultImage = ref<string>(
@@ -32,10 +25,13 @@ onMounted(() => {
 })
 
 const usersWithPoints = computed(() => {
-  return users.value.map((user: User) => ({
-    ...user,
-    points: 0
-  }))
+  return users.value.map(
+    (user: User) =>
+      ({
+        ...user,
+        points: 0
+      }) as UserWithPoints
+  )
 })
 
 watch([users, images], (newItems) => {
@@ -43,7 +39,6 @@ watch([users, images], (newItems) => {
   usersWithPoints.value.forEach((user) => {
     user.image = images[user.id]?.image?.thumbnailLink
   })
-  console.log(users, 'users')
 })
 
 function getValue() {
@@ -63,7 +58,7 @@ function addPoints(userId: number) {
       user.points = user.points + 3
       console.log(user.points)
     }
-    if (user.points >= 3) {
+    if (user.points >= 6) {
       createBill(user.id).then((res) => {
         bill.value = res
         console.log(bill.value)
@@ -103,19 +98,7 @@ function handleImageLike(userId: number) {
 
     <div class="h-4/5 flex flex-col items-center md:flex-row justify-evenly" v-if="showResults">
       <div class="w-80 h-60 relative mt-10" v-for="user in usersWithPoints" :key="user.id">
-        <div class="w-full">
-          <img
-            class="w-full shadow-lg rounded h-52 object-cover"
-            :src="user.image || defaultImage"
-            alt="random image"
-          />
-          <button
-            class="shadow ease-in duration-300 left-2/4 bottom-0 w-16 h-16 border-4 border-white rounded-full absolute bg-light-red -translate-x-2/4 flex justify-center items-center hover:bg-dark-red hover:scale-110"
-            @click="handleImageLike(user.id)"
-          >
-            <img class="w-7" :src="likeIcon" />
-          </button>
-        </div>
+        <ContestImage @like="handleImageLike" :user="user" :defaultImage="defaultImage" />
       </div>
     </div>
     <div v-else class="h-4/5 flex flex-col justify-center items-center">
@@ -125,7 +108,6 @@ function handleImageLike(userId: number) {
         Nuestros vendedores están listos para responder a tu solicitud
       </p>
     </div>
-
     <div v-for="user in usersWithPoints" :key="user.id">
       <div class="mb-1 text-base font-medium text-dark-green">
         {{ user.name }}
@@ -146,32 +128,3 @@ function handleImageLike(userId: number) {
     <div></div>
   </section>
 </template>
-
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-}
-</style>
