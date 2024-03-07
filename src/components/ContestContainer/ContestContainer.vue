@@ -44,13 +44,16 @@ watch([users, images], (newItems) => {
 
 function getValue() {
   searchValue.value = searchText.value
+  if (searchValue.value.trim() !== '') {
+    getImages(searchValue.value).then((res) => {
+      images.value = res
+      showResults.value = true
+    })
 
-  getImages(searchValue.value).then((res) => {
-    images.value = res
-    showResults.value = true
-  })
-
-  searchText.value = ''
+    searchText.value = ''
+  } else {
+    console.log('ingresa un valor')
+  }
 }
 
 function addPoints(userId: number) {
