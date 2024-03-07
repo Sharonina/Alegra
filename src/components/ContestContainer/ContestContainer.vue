@@ -59,7 +59,7 @@ function addPoints(userId: number) {
       user.points = user.points + 3
       console.log(user.points)
     }
-    if (user.points >= 3) {
+    if (user.points >= 20) {
       createBill(user.id).then((res) => {
         bill.value = res
         console.log(bill.value)
